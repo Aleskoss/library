@@ -7,9 +7,8 @@ function Book(title,author,pages,read){
   this.read = read
   this.id = crypto.randomUUID()
 }
-Book.prototype.bookInfo = function(){
-  console.log(`The ${this.title} was written by ${this.author}
-    and has ${this.pages}`)
+Book.prototype.toggleStatus = function(){
+
 }
 function addBookToLibrary(){
   const bookBtn = document.querySelector(".add-btn")
@@ -17,16 +16,33 @@ function addBookToLibrary(){
     let authorPrompt = document.querySelector("#author").value
     let titlePrompt = document.querySelector("#title").value
     let pagesPrompt = document.querySelector("#pages").value
-    let read = document.querySelector("#read").value
-    read === "on" ? read = "yes" : read = "not yet"
-    library.push(new Book(titlePrompt, authorPrompt, pagesPrompt, read))
+    library.push(new Book(titlePrompt, authorPrompt, pagesPrompt, "not yet"))
     localStorage.setItem("library", JSON.stringify(library))
     displayBooks()
   })
 }
-
 function displayBooks(){
   const table = document.querySelector("table")
+  while(table.lastChild){
+    table.removeChild(table.lastChild)
+  }
+  const tRow = document.createElement("tr")
+  const caption = document.createElement("caption")
+  caption.textContent = "Books"
+  tRow.appendChild(caption)
+  const thTitle = document.createElement("th")
+  thTitle.textContent = "Title"
+  tRow.appendChild(thTitle)
+  const thAuthor = document.createElement("th")
+  thAuthor.textContent = "Author"
+  tRow.appendChild(thAuthor)
+  const thPages = document.createElement("th")
+  thPages.textContent = "Pages"
+  tRow.appendChild(thPages)
+  const thRead = document.createElement("th")
+  thRead.textContent = "Read"
+  tRow.appendChild(thRead)
+  table.appendChild(tRow)
   for(let i = 0 ; i < library.length ; i++){
     const tRow = document.createElement("tr")
     const tdTitle = document.createElement("td")
@@ -60,8 +76,8 @@ function deleteBook(){
        localStorage.setItem("library", JSON.stringify(library))
       }
     }
+    displayBooks()
   }))
-  displayBooks()
 }
 
 displayBooks()
