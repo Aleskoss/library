@@ -8,7 +8,7 @@ function Book(title,author,pages,read){
   this.id = crypto.randomUUID()
 }
 Book.prototype.toggleReadStatus = function(){
-  return this.read === "not yet" ? this.read = "read" : "not yet"
+  return this.read === "not yet" ? this.read = "read" : this.read = "not yet"
 }
 let book = new Book("helo","asdasdasd","asdawdads","not yet")
 function addBookToLibrary(){
@@ -22,6 +22,7 @@ function addBookToLibrary(){
     library.push(book)
     displayBooks()
     deleteBook()
+    changeReadStatus()
   })
 }
 function displayBooks(){
@@ -86,6 +87,7 @@ function deleteBook(){
     }
     displayBooks()
     deleteBook()
+    changeReadStatus()
   }))
 }
 
@@ -97,6 +99,9 @@ function changeReadStatus(){
        library[library.indexOf(book)].toggleReadStatus()
       }
   }
+  displayBooks()
+  changeReadStatus()
+  deleteBook()
 }))
 }
 
