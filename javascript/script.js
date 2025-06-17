@@ -1,4 +1,4 @@
-let library = JSON.parse(localStorage.getItem("library")) || []
+let library = []
 
 function Book(title,author,pages,read){
   this.title = title
@@ -7,18 +7,21 @@ function Book(title,author,pages,read){
   this.read = read
   this.id = crypto.randomUUID()
 }
-Book.prototype.toggleStatus = function(){
-
+Book.prototype.toggleReadStatus = function(){
+  return this.read === "not yet" ? this.read = "read" : "not yet"
 }
+let book = new Book("helo","asdasdasd","asdawdads","not yet")
 function addBookToLibrary(){
   const bookBtn = document.querySelector(".add-btn")
-  bookBtn.addEventListener("click", () =>{
+  bookBtn.addEventListener("click", (event) =>{
+    event.preventDefault()
     let authorPrompt = document.querySelector("#author").value
     let titlePrompt = document.querySelector("#title").value
     let pagesPrompt = document.querySelector("#pages").value
-    library.push(new Book(titlePrompt, authorPrompt, pagesPrompt, "not yet"))
-    localStorage.setItem("library", JSON.stringify(library))
+    let book = new Book(titlePrompt, authorPrompt, pagesPrompt, "not yet")
+    library.push(book)
     displayBooks()
+    deleteBook()
   })
 }
 function displayBooks(){
@@ -26,10 +29,9 @@ function displayBooks(){
   while(table.lastChild){
     table.removeChild(table.lastChild)
   }
-  const tRow = document.createElement("tr")
   const caption = document.createElement("caption")
   caption.textContent = "Books"
-  tRow.appendChild(caption)
+  const tRow = document.createElement("tr")
   const thTitle = document.createElement("th")
   thTitle.textContent = "Title"
   tRow.appendChild(thTitle)
@@ -42,6 +44,7 @@ function displayBooks(){
   const thRead = document.createElement("th")
   thRead.textContent = "Read"
   tRow.appendChild(thRead)
+  table.appendChild(caption)
   table.appendChild(tRow)
   for(let i = 0 ; i < library.length ; i++){
     const tRow = document.createElement("tr")
@@ -51,19 +54,24 @@ function displayBooks(){
     const tdRead = document.createElement("td")
     const deleteBtn = document.createElement("button")
     deleteBtn.classList.add("delete")
+    const readBtn = document.createElement("button")
+    readBtn.classList.add("read")
     table.appendChild(tRow)
     tdTitle.textContent = library[i].title
     tdAuthor.textContent = library[i].author
     tdPages.textContent = library[i].pages
     tdRead.textContent = library[i].read
+    readBtn.textContent = "Check as read"
     deleteBtn.textContent = "Delete"
     deleteBtn.dataset.id = library[i].id
+    readBtn.dataset.id = library[i].id
     tRow.dataset.id = library[i].id
     tRow.appendChild(tdTitle)
     tRow.appendChild(tdAuthor)
     tRow.appendChild(tdPages)
     tRow.appendChild(tdRead)
     tRow.appendChild(deleteBtn)
+    tRow.appendChild(readBtn)
   }
 }
 
@@ -77,7 +85,19 @@ function deleteBook(){
       }
     }
     displayBooks()
+    deleteBook()
   }))
+}
+
+function changeReadStatus(){
+  const readBtns = document.querySelectorAll(".read")
+  readBtns.forEach((item) => item.addEventListener("click", () => {
+    for(let book of library){
+      if(item.dataset.id === book.id){
+       library[library.indexOf(book)].toggleReadStatus()
+      }
+  }
+}))
 }
 
 displayBooks()
