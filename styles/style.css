@@ -33,13 +33,12 @@ body{
 table{
   display: grid;
   grid-template-rows: 50px 50px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-auto-rows: 25px;
 }
 caption{
   font-size: 1.5rem;
   grid-column: 1/2;
-  justify-self: left;
   align-self: flex-start;
   border-bottom: 4px solid var(--cerulean-color);
 }
@@ -48,14 +47,16 @@ tr{
   grid-template-columns: repeat(6,1fr);
   justify-items: center;
   grid-column: 1/3;
+  justify-self: stretch;
 }
-tr td{
+tr td,
+tr th{
   text-overflow: ellipsis;
   text-wrap: whitespace;
   justify-self: stretch;
   text-align: center;
   border: 1px solid var(--blue-color);
-  margin-top: 4px;
+  padding-top: 4px;
 }
 .sidebar{
   grid-area: 2/1/3/2;

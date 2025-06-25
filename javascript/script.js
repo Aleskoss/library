@@ -1,17 +1,17 @@
 let library = []
 
-function Book(title,author,pages,read){
+class Book{
+  constructor(title,author,pages,read){
   this.title = title
   this.author = author
   this.pages = pages
   this.read = read
   this.id = crypto.randomUUID()
-}
-Book.prototype.toggleReadStatus = function(){
-  return this.read === "not yet" ? this.read = "read" : this.read = "not yet"
-}
-let book = new Book("helo","asdasdasd","asdawdads","not yet")
-function addBookToLibrary(){
+  }
+  toggleReadStatus = () => {
+    return this.read === "not yet" ? this.read = "read" : this.read = "not yet"
+  }
+  static addBookToLibrary = () => {
   const bookBtn = document.querySelector(".add-btn")
   bookBtn.addEventListener("click", (event) =>{
     event.preventDefault()
@@ -20,12 +20,10 @@ function addBookToLibrary(){
     let pagesPrompt = document.querySelector("#pages").value
     let book = new Book(titlePrompt, authorPrompt, pagesPrompt, "not yet")
     library.push(book)
-    displayBooks()
-    deleteBook()
-    changeReadStatus()
+    this.init()
   })
 }
-function displayBooks(){
+  static displayBooks = () => {
   const table = document.querySelector("table")
   while(table.lastChild){
     table.removeChild(table.lastChild)
@@ -75,8 +73,7 @@ function displayBooks(){
     tRow.appendChild(readBtn)
   }
 }
-
-function deleteBook(){
+  static deleteBook = () => {
   const deleteBtns = document.querySelectorAll(".delete")
   deleteBtns.forEach((item) => item.addEventListener("click", () => {
     for(let book of library){
@@ -85,13 +82,10 @@ function deleteBook(){
        localStorage.setItem("library", JSON.stringify(library))
       }
     }
-    displayBooks()
-    deleteBook()
-    changeReadStatus()
+    this.init()
   }))
 }
-
-function changeReadStatus(){
+  static changeReadStatus = () => {
   const readBtns = document.querySelectorAll(".read")
   readBtns.forEach((item) => item.addEventListener("click", () => {
     for(let book of library){
@@ -99,14 +93,16 @@ function changeReadStatus(){
        library[library.indexOf(book)].toggleReadStatus()
       }
   }
-  displayBooks()
-  changeReadStatus()
-  deleteBook()
+  this.init()
 }))
 }
+  static init(){
+    this.displayBooks()
+    this.changeReadStatus()
+    this.deleteBook()
+  }
+}
+let book = new Book("helo","asdasdasd","asdawdads","not yet")
 
-displayBooks()
-
-addBookToLibrary()
-
-deleteBook()
+Book.init()
+Book.addBookToLibrary()
