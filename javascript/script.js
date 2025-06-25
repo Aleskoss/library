@@ -1,6 +1,5 @@
-let library = []
-
 class Book{
+  static library = []
   constructor(title,author,pages,read){
   this.title = title
   this.author = author
@@ -19,7 +18,7 @@ class Book{
     let titlePrompt = document.querySelector("#title").value
     let pagesPrompt = document.querySelector("#pages").value
     let book = new Book(titlePrompt, authorPrompt, pagesPrompt, "not yet")
-    library.push(book)
+    this.library.push(book)
     this.init()
   })
 }
@@ -45,7 +44,7 @@ class Book{
   tRow.appendChild(thRead)
   table.appendChild(caption)
   table.appendChild(tRow)
-  for(let i = 0 ; i < library.length ; i++){
+  for(let i = 0 ; i < this.library.length ; i++){
     const tRow = document.createElement("tr")
     const tdTitle = document.createElement("td")
     const tdAuthor = document.createElement("td")
@@ -56,15 +55,15 @@ class Book{
     const readBtn = document.createElement("button")
     readBtn.classList.add("read")
     table.appendChild(tRow)
-    tdTitle.textContent = library[i].title
-    tdAuthor.textContent = library[i].author
-    tdPages.textContent = library[i].pages
-    tdRead.textContent = library[i].read
+    tdTitle.textContent = this.library[i].title
+    tdAuthor.textContent = this.library[i].author
+    tdPages.textContent = this.library[i].pages
+    tdRead.textContent = this.library[i].read
     readBtn.textContent = "Check as read"
     deleteBtn.textContent = "Delete"
-    deleteBtn.dataset.id = library[i].id
-    readBtn.dataset.id = library[i].id
-    tRow.dataset.id = library[i].id
+    deleteBtn.dataset.id = this.library[i].id
+    readBtn.dataset.id = this.library[i].id
+    tRow.dataset.id = this.library[i].id
     tRow.appendChild(tdTitle)
     tRow.appendChild(tdAuthor)
     tRow.appendChild(tdPages)
@@ -76,10 +75,10 @@ class Book{
   static deleteBook = () => {
   const deleteBtns = document.querySelectorAll(".delete")
   deleteBtns.forEach((item) => item.addEventListener("click", () => {
-    for(let book of library){
+    for(let book of this.library){
       if(item.dataset.id === book.id){
-       library.splice(library.indexOf(book),1)
-       localStorage.setItem("library", JSON.stringify(library))
+       this.library.splice(this.library.indexOf(book),1)
+       localStorage.setItem("library", JSON.stringify(this.library))
       }
     }
     this.init()
@@ -88,9 +87,9 @@ class Book{
   static changeReadStatus = () => {
   const readBtns = document.querySelectorAll(".read")
   readBtns.forEach((item) => item.addEventListener("click", () => {
-    for(let book of library){
+    for(let book of this.library){
       if(item.dataset.id === book.id){
-       library[library.indexOf(book)].toggleReadStatus()
+       this.library[this.library.indexOf(book)].toggleReadStatus()
       }
   }
   this.init()
